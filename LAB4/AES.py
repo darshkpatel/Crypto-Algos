@@ -4,6 +4,11 @@ input_key = "5468617473206D79204B756E67204675"
 input_key = input_key.rstrip().replace(" ","")
 words = split_string(8,input_key)
 words = [split_string(2,word) for word in words]
+
+input_plain = "54776F204F6E65204E696E652054776F"
+input_plain = input_plain.rstrip().replace(" ","")
+plain = split_string(8,input_plain)
+plain = [split_string(2,word) for word in plain]
 #print(words)
 
 
@@ -18,6 +23,7 @@ for i in range(4,48):
     # w[i-4]
     if(i%4!=0):
         # print(i-4,"XOR", i-1)
+        # print(words[i-4])
         generated_word = xor_str(words[i-4],words[i-1])
         words.append(int_to_hex(generated_word))
     else:
@@ -28,13 +34,14 @@ for i in range(4,48):
     # print(words[i])
 
 new = []
+keys = []
 for x in range(len(words)):
     if(x==0 or x%4==0):
         count = 0
         # print(new)
         if len(new):
+            keys.append(new)
             final = [''.join(x) for x in new]
-            print(final)
             final = ''.join(final)
             spaced = split_string(2, final)
             final = ' '.join(spaced)
@@ -42,3 +49,6 @@ for x in range(len(words)):
         new = []
 
     new.append(words[x])
+
+rounds = []
+rounds.append(apply_round_key(keys[0], plain))

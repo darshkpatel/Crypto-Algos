@@ -46,6 +46,8 @@ def left_shift(pos, arr):
     left =  arr[pos:]
     right = arr[:pos]
     return left+right
+def right_shift(pos, arr):
+    return left_shift(len(arr)-pos,arr)
 
 def byte_left_shift(word):
     return left_shift(1,word)
@@ -59,3 +61,36 @@ def substitute_sbox(word):
 
 def apply_RoundCONstant(word,i):
     return int_to_hex(xor_str_int(word,(Rcon[i],0,0,0)))
+
+def apply_round_key(key,plain):
+    new = []
+    for x,y in zip(key,plain):
+        new.append(list(xor_str(x, y)))
+    return new
+
+def to_matrix(X):
+    return [[X[j][i] for j in range(len(X))] for i in range(len(X[0]))]
+
+def to_arr(X):
+    return [[X[i][j] for j in range(len(X))] for i in range(len(X[0]))]
+
+def shift_rows(arr):
+    for x in range(0,4):
+        arr[x] = left_shift(x,arr[x])
+    return arr
+def inv_shift_rows(arr):
+    for x in range(0,4):
+        arr[x] = right_shift(x,arr[x])
+    return arr
+
+def pprint(arr):
+    for x in arr:
+        print(x)
+
+def mix_cols(arr):
+    mix_cols_mat = [
+        [2,3,1,1],
+        [1,2,3,1],
+        [1,1,2,3],
+        [3,1,1,2]
+    ]
