@@ -1,6 +1,6 @@
 from aes_helpers import *
-input_key = input("Enter 128 bit key in HEX: ")
-# input_key = "5468617473206D79204B756E67204675"
+#input_key = input("Enter 128 bit key in HEX: ")
+input_key = "5468617473206D79204B756E67204675"
 input_key = input_key.rstrip().replace(" ","")
 words = split_string(8,input_key)
 words = [split_string(2,word) for word in words]
@@ -34,6 +34,7 @@ for x in range(len(words)):
         # print(new)
         if len(new):
             final = [''.join(x) for x in new]
+            print(final)
             final = ''.join(final)
             spaced = split_string(2, final)
             final = ' '.join(spaced)
