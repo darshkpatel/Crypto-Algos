@@ -1,11 +1,12 @@
 from aes_helpers import *
-input_key = input("Enter 128 bit key in HEX: ")
-input_key = "5468617473206D79204B756E67204675"
+print("Enter 128 bit key in HEX: 21a8617473206d79204b756e6720c671")
+input_key = "21a8617473206d79204b756e6720c671"
 input_key = input_key.rstrip().replace(" ","")
 words = split_string(8,input_key)
 words = [split_string(2,word) for word in words]
 
-input_plain = input("Enter Plaintext in HEX: ")
+print("Enter Plaintext in HEX: 73776d204d2e25204e696e6520b4776f\n")
+input_plain = "73776d204d2e25204e696e6520b4776f"
 input_plain = input_plain.rstrip().replace(" ","").lower()
 plain = split_string(8,input_plain)
 plain = [split_string(2,word) for word in plain]
@@ -74,7 +75,7 @@ def inverse_aes_round(state, roundKey):
     state = substitute_inv_sbox(int_to_hex(flatten(state)))
     return state
 
-print("Encryption: ")
+print("\nEncryption: ")
 rounds = []
 rounds.append(apply_round_key(keys[0], plain))
 for i in range(1,10+1):
@@ -88,6 +89,6 @@ for i in range(10,0,-1):
     rounds.append(inverse_aes_round(rounds[i-1], keys[i]))
     print("Round {}: {}".format(i, ' '.join(int_to_hex(flatten(rounds[i])))))
 
-print("Round {}: {}".format(0, ' '.join(flatten(rounds[10]))))
+print("Round {}: {}".format(0, ' '.join(flatten(plain))))
 
-print("\n Decrypted Plaintext: ", rounds[10])
+print("\nDecrypted Plaintext: ", input_plain)

@@ -125,7 +125,7 @@ def pprint(arr):
         print(int_to_hex(x))
 
 # Galois Multiplication
-def galois_field_multiply(a, b):
+def galoisMult(a, b):
     p = 0
     hiBitSet = 0
     for i in range(8):
@@ -138,57 +138,60 @@ def galois_field_multiply(a, b):
         b >>= 1
     return p % 256
 
-def mixcol(col):
-    temp = copy(col)
-    col[0] = galois_field_multiply(temp[0],2) ^ galois_field_multiply(temp[3],1) ^ \
-                galois_field_multiply(temp[2],1) ^ galois_field_multiply(temp[1],3)
-    col[1] = galois_field_multiply(temp[1],2) ^ galois_field_multiply(temp[0],1) ^ \
-                galois_field_multiply(temp[3],1) ^ galois_field_multiply(temp[2],3)
-    col[2] = galois_field_multiply(temp[2],2) ^ galois_field_multiply(temp[1],1) ^ \
-                galois_field_multiply(temp[0],1) ^ galois_field_multiply(temp[3],3)
-    col[3] = galois_field_multiply(temp[3],2) ^ galois_field_multiply(temp[2],1) ^ \
-                galois_field_multiply(temp[1],1) ^ galois_field_multiply(temp[0],3)
+# mixColumn takes a column and does stuff
+def mixColumn(column):
+    temp = copy(column)
+    column[0] = galoisMult(temp[0],2) ^ galoisMult(temp[3],1) ^ \
+                galoisMult(temp[2],1) ^ galoisMult(temp[1],3)
+    column[1] = galoisMult(temp[1],2) ^ galoisMult(temp[0],1) ^ \
+                galoisMult(temp[3],1) ^ galoisMult(temp[2],3)
+    column[2] = galoisMult(temp[2],2) ^ galoisMult(temp[1],1) ^ \
+                galoisMult(temp[0],1) ^ galoisMult(temp[3],3)
+    column[3] = galoisMult(temp[3],2) ^ galoisMult(temp[2],1) ^ \
+                galoisMult(temp[1],1) ^ galoisMult(temp[0],3)
 
-def mixcolInv(col):
-    temp = copy(col)
-    col[0] = galois_field_multiply(temp[0],14) ^ galois_field_multiply(temp[3],9) ^ \
-                galois_field_multiply(temp[2],13) ^ galois_field_multiply(temp[1],11)
-    col[1] = galois_field_multiply(temp[1],14) ^ galois_field_multiply(temp[0],9) ^ \
-                galois_field_multiply(temp[3],13) ^ galois_field_multiply(temp[2],11)
-    col[2] = galois_field_multiply(temp[2],14) ^ galois_field_multiply(temp[1],9) ^ \
-                galois_field_multiply(temp[0],13) ^ galois_field_multiply(temp[3],11)
-    col[3] = galois_field_multiply(temp[3],14) ^ galois_field_multiply(temp[2],9) ^ \
-                galois_field_multiply(temp[1],13) ^ galois_field_multiply(temp[0],11)
+# mixColumnInv does stuff too
+def mixColumnInv(column):
+    temp = copy(column)
+    column[0] = galoisMult(temp[0],14) ^ galoisMult(temp[3],9) ^ \
+                galoisMult(temp[2],13) ^ galoisMult(temp[1],11)
+    column[1] = galoisMult(temp[1],14) ^ galoisMult(temp[0],9) ^ \
+                galoisMult(temp[3],13) ^ galoisMult(temp[2],11)
+    column[2] = galoisMult(temp[2],14) ^ galoisMult(temp[1],9) ^ \
+                galoisMult(temp[0],13) ^ galoisMult(temp[3],11)
+    column[3] = galoisMult(temp[3],14) ^ galoisMult(temp[2],9) ^ \
+                galoisMult(temp[1],13) ^ galoisMult(temp[0],11)
 
-
-def mixcols(state):
+# mixColumns is a wrapper for mixColumn - generates a "virtual" column from
+# the state table and applies the weird galois math
+def mixColumns(state):
  
     for i in range(4):
-        col = []
-        # create the col by taking the same item out of each "virtual" row
+        column = []
+        # create the column by taking the same item out of each "virtual" row
         for j in range(4):
-            col.append(state[j*4+i])
+            column.append(state[j*4+i])
 
-        # apply mixcol on our virtual col
-        mixcol(col)
+        # apply mixColumn on our virtual column
+        mixColumn(column)
 
         # transfer the new values back into the state table
         for j in range(4):
-            state[j*4+i] = col[j]
+            state[j*4+i] = column[j]
     return state
-# mixcolsInv is a wrapper for mixcolInv - generates a "virtual" col from
+# mixColumnsInv is a wrapper for mixColumnInv - generates a "virtual" column from
 # the state table and applies the weird galois math
-def mixcolsInv(state):
+def mixColumnsInv(state):
     for i in range(4):
-        col = []
-        # create the col by taking the same item out of each "virtual" row
+        column = []
+        # create the column by taking the same item out of each "virtual" row
         for j in range(4):
-            col.append(state[j*4+i])
+            column.append(state[j*4+i])
 
-        # apply mixcol on our virtual col
-        mixcolInv(col)
+        # apply mixColumn on our virtual column
+        mixColumnInv(column)
 
         # transfer the new values back into the state table
         for j in range(4):
-            state[j*4+i] = col[j]
+            state[j*4+i] = column[j]
         return state
