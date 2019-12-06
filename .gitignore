@@ -1,3 +1,5 @@
 .pycache
 Project
 *.pyc
+__pycache__
+*__pycache__*
